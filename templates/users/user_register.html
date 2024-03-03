@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>橘子青柠.COM</title>
+    <link rel="stylesheet" href="{% static 'plugin/bootstrap-4.6.2-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugin/bootstrap-icons-1.11.2/font/bootstrap-icons.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'plugin/jquery-datetimepicker/jquery.datetimepicker.css' %}"/ >
+    
+</head>
+<body class="text-left">
+<div class="container container-lg container-md container-sm container-xl shadow rounded" style="margin-top: 4%; width: 60vh">
+    <form class="form-signin" method="post" novalidate>
+        {% csrf_token %}
+      <h1 class="h3 mb-3 font-weight-normal">注册</h1>
+        {% for field in form %}
+            {{ field.label }}:
+            {{ field }}        
+            <small id="Help" class="form-text text-danger">{{ field.errors.0 }}</small>
+        {% endfor %}
+            {{ form.code }}
+            <small id="Help3" class="form-text text-muted">{{ form.code.errors.0 }}</small>
+            <img src="{% url 'users:auth_image_code' %}" alt="验证码"/>
+<button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
+    </form>
+    <small id="Help4" class="form-text text-muted">已有账号？ <a href="{% url 'users:user_login' %}">立即登录</a></small>
+</div>
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'plugin/jquery-datetimepicker/build/jquery.datetimepicker.full.js' %}"></script>
+<script src="{% static 'plugin/bootstrap-4.6.2-dist/js/bootstrap.min.js' %}"></script>
+<script>
+    $.datetimepicker.setLocale('zh');
+    $('#id_birthday').datetimepicker({
+        format: 'Y-m-d',
+        timepicker:false,
+        maxDate:0
+    });
+</script>
+</body>
+</html>

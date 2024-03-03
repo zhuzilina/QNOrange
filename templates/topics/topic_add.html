@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container text-center" style="margin-top: 6vh">
+    <h1>添加新动态</h1>
+        <form method="post" novalidate class="form-group">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="row">
+                {{ field }}
+                <span style="color:red">{{ field.errors.0 }}</span>
+            </div>
+        {% endfor %}
+            <button type="submit" value="发布" class="btn btn-primary display-4" style="width:10vw; height:5vh">发布</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="jumbotron navbackground shadow w-25 p-3 float-left text-center" style="margin-top: 4.7vh">
+            
+            <img id='user_photo' src="{% static 'img/photos' %}/{{ user_photo }}" alt="" class="img-thumbnail img-rounded"/>
+                
+            <div class="jumbotron navbackground shadow w-75 p-3 align-bottom text-left" style="margin-top: 4.7vh;margin-left: 3vh">
+                    <a href="#" change_info="1" id="name">用户名：{{ user.user_name }}</a>
+                    <hr>
+                {% if user.says %}
+                    <a href="#" change_info="2" id="says">个性签名：{{ user.says }}</a>
+                {% else %}
+                    <a href="#" change_info="2" id="says">个性签名：太懒了没写</a>
+                {% endif %}
+                    <hr>
+                {% if user.gender %}
+                    <a href="#" change_info="3" id="gender">性别：{{ user.get_gender_display }}</a>
+                {% else %}
+                    <a href="#" change_info="3" id="gender">性别：保密</a>
+                {% endif %}
+                    <hr>
+                {% if user.birthday %}
+                    <a href="#" change_info="4" id="birth">生日：{{ user.birthday }}</a>
+                {% else %}
+                    <a href="#" change_info="4" id="birth">生日：未知</a>
+                {% endif %}
+                    <hr>
+                {% if user.address %}
+                    <a href="#" change_info="5" id="address">地区：{{ user.address }}</a>
+                {% else %}
+                    <a href="#" change_info="5" id="address">地区：未知</a>
+                {% endif %}
+            </div>
+        </div>
+        <div id="right_box" class="jumbotron navbackground shadow p-3 float-right" style="margin-top: 4.7vh; width: 73%">
+            <div class="align-top text-center h-25 p-3 jumbotron bg-transparent">
+                <div class="float-left bg-transparent text-left" style="width: 60%">
+                    <div class="row container-fluid">
+                        <div class="col-8">
+                            <span id="topic_account">1</span> 发布 &nbsp;&nbsp;&nbsp;&nbsp;<span id="like_account">2</span> 获赞
+                        </div>
+                        <div class="col-4">
+                            <button id="Message">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16" id="Message">
+                              <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+                            </svg>
+                            <span class="badge badge-danger" id="message_account">0</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="float-right bg-transparent" style="width: 30%"><a href="{% url 'topics:topic_add' %}"><h3>发布内容</h3></a></div>
+            </div>
+            <div  id='content_box' class="align-bottom text-center h-25 p-3 jumbotron bg-transparent container">
+                {% for topic in topics %}
+                <div class="bg-transparent shadow jumbotron text-left" style="margin-top: 4.7vh">
+                    <a href="{% url 'topics:topic_view' topic.id %}"><h5>{{ topic.title }}</h5></a>
+                    <h6>{{ topic.date_added }}</h6>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    
+        <!-- Modal 信息修改 -->
+    <div class="modal fade" id="InfoModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal_title">标题</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="info_content">
+        <!-- 填充的内容 -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+        <button type="button" id="Btn1" class="btn btn-primary">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    $(function (){
+        name_event();
+        says_event();
+        gender_event();
+        birth_event();
+        address_event();
+        send_info_event();
+        message_event();
+    })
+    //处理信息的修改
+    function name_event() {
+        //响应昵称
+        $('#name').click(function () {
+            $('#InfoModal').modal('show');
+            $('#info_content').empty();
+            var change_info = document.querySelector('#name').getAttribute('change_info');
+            var content = "<input type='text' id='input_info' class='form-control' placeholder='输入昵称...'/>"
+            $('#info_content').append(content);
+            document.querySelector('#Btn1').setAttribute('change_info', change_info);
+            $("#modal_title").text("修改昵称")
+        });
+    }
+    function says_event() {
+        //响应个性签名
+        $('#says').click(function () {
+            $('#InfoModal').modal('show');
+            $('#info_content').empty();
+            var change_info = document.querySelector('#says').getAttribute('change_info');
+            var content = "<input type='text' id='input_info' class='form-control' placeholder='输入个性签名...'/>"
+            $('#info_content').append(content);
+            document.querySelector('#Btn1').setAttribute('change_info', change_info);
+            $("#modal_title").text("修改个性签名")
+        });
+    }
+    function gender_event() {
+        //响应性别
+        $('#gender').click(function () {
+            $('#InfoModal').modal('show');
+            $('#info_content').empty();
+            var change_info = document.querySelector('#gender').getAttribute('change_info');
+            var content = "<div class='container row'> <div class='col'> <input type='radio' name='gender' id='input_info1' class='form-check-input' value='1'/>男 " +
+                "</div> <div class='col'> <input type='radio' name='gender' id='input_info2' class='form-check-input' value='2'/>女 </div> </div>"
+            $('#info_content').append(content);
+            document.querySelector('#Btn1').setAttribute('change_info', change_info);
+            $("#modal_title").text("修改性别")
+        });
+    }
+    function address_event() {
+        //响应地区
+        $('#address').click(function () {
+            $('#InfoModal').modal('show');
+            $('#info_content').empty();
+            var change_info = document.querySelector('#address').getAttribute('change_info');
+            var content = "<input type='text' id='input_info' class='form-control' placeholder='输入地区...'/>"
+            $('#info_content').append(content);
+            document.querySelector('#Btn1').setAttribute('change_info', change_info);
+            $("#modal_title").text("修改地区")
+        });
+    }
+    function birth_event() {
+        //响应生日
+        $('#birth').click(function () {
+            $('#InfoModal').modal('show');
+            $('#info_content').empty();
+            var change_info = document.querySelector('#birth').getAttribute('change_info');
+            var content = "<input type='text' id='input_info' class='form-control' placeholder='请选择生日...'/>"
+            $('#info_content').append(content);
+            document.querySelector('#Btn1').setAttribute('change_info', change_info);
+            $("#modal_title").text("修改生日")
+            $.datetimepicker.setLocale('zh');
+            $('#input_info').datetimepicker({
+                format: 'Y-m-d',
+                timepicker:false,
+                maxDate:0
+            });
+        });
+    }
+    //传输修改的信息
+    function send_info_event(){
+        $('#Btn1').click(function(){
+            var gender = $('input[name=gender]:checked').val();
+            var change_info = document.querySelector('#Btn1').getAttribute('change_info');
+            try{
+            var data = document.getElementById('input_info').value;
+            }catch (error){
+                data = gender;
+            }
+            console.log(change_info);
+           $.ajax({
+               url: "{% url 'users:change_info' %}",
+                type: "post",
+                data: {
+                    change_info: change_info,
+                    data: data,
+                },
+                datatype: "JSON",
+                success: function (res){
+                   if(res.status){
+                       $('#InfoModal').modal('hide');
+                       location.reload();
+                   } else {
+                       alert(res.message);
+                   }
+               }
+            });
+        }); 
+    }
+    //处理统计信息
+    $(document).ready(function (){
+        $.ajax({
+               url: "{% url 'users:sum_info' %}",
+                type: "post",
+                data: {
+                    data: 0,
+                },
+                datatype: "JSON",
+                success: function (res){
+                   if(res.status){
+                       var like_account = res.like_account;
+                       var topic_account = res.topic_account;
+                       var message_account = res.message_account;
+                       $("#like_account").text(like_account);
+                       $("#topic_account").text(topic_account);
+                       $("#message_account").text(message_account);
+                   }else{
+                      $("#like_account").text(0);
+                      $("#topic_account").text(0); 
+                   }
+               }
+        });
+    });
+    //请求获取消息列表
+    function message_event(){
+        $('#Message').click(function(){
+           $.ajax({
+               url: "{% url 'users:message' %}",
+                type: "post",
+                data: {
+                    data: 1,
+                },
+                datatype: "JSON",
+                success: function (res){
+                   if(res.status){
+                       $("#content_box").empty();
+                       $("#content_box").append(res.messages);
+                   } else {
+                       $("#content_box").empty();
+                       $("#content_box").append("<p>暂时没有消息</p>")
+                   }
+               }
+            });
+        }); 
+    }
+</script>
+{% endblock %}

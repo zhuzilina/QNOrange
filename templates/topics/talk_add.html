@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="row">
+                <div class="col-md-1">{{ field.label }}</div>
+                <div class="col-md-6">{{ field }}</div>
+                <span style="color:red">{{ field.errors.0 }}</span>
+            </div>
+        {% endfor %}
+        <input type="submit" value="发布" class="btn btn-success">
+        </form>
+    </div>
+{% endblock %}

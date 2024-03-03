@@ -1,0 +1,7 @@
+[client]
+database = 'main_data'
+user = 'django_user'
+password = 'admin'
+default-character-set = utf8
+host = '127.0.0.1'
+port = 32768

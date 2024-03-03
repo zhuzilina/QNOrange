@@ -1,0 +1,98 @@
+{% extends 'index_base.html' %}
+{% load static %}
+
+{% block css %}
+@font-face {
+    font-family: 'FontTitle';
+    src: url('{% static 'img/font_title.ttf' %}') format('truetype');
+    }
+.ss {
+    background: linear-gradient(to right, rgba(217, 175, 217, 0.4), rgba(151, 217, 225, 0.4));
+}
+.fill {
+    flex-grow: 1;
+    }
+h1,h2,h3{
+    text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+    font-family: 'FontTitle';
+    color: #fff;
+    }
+a{
+    color: #fff;
+    }
+.navbar .nav-link{
+    font-size: 20px
+    }
+{% endblock %}
+
+
+{% block content %}
+
+<div class="d-flex flex-column vh-100 container-fluid">
+        <div class="ss text-center" style="height: 16vh">
+            <nav class="navbar navbar-expand-sm bg-transparent">
+                <img class="navbar-brand" src="{% static 'img/LOGO.svg' %}" width="7%" height="7%">
+                <h1><a class="navbar" href="{% url 'weweb:index' %}">主页</a></h1>
+                <h1><a class="navbar" href="{% url 'topics:topics_view' %}">APP</a></h1>
+                <h1><a class="navbar" href="{% url 'weweb:about' %}">关于</a></h1>
+            </nav>
+        </div>
+        <!-- 中部区域 -->
+        <div class="bg-transparent" style="margin-top: 20vh;margin-bottom: 5vh">
+            
+            <div class="row text-light">
+                <div class="col text-center col-sm">
+                    <h1 class="display-3"><a class="navbar" href="{% url 'weweb:story' %}">陆伍贰之故事</a></h1>
+                </div>
+                <div class="col text-center col-sm">
+                    <h1 class="display-3"><a class="navbar" href="{% url 'topics:topics_view' %}">青春之故事</a></h1>
+                </div>
+                <div class="col text-center col-sm">
+                    <h1 class="display-3"><a class="navbar" href="{% url 'weweb:story' %}">SUSE之风采</a></h1>
+                </div>
+            </div>
+            
+        </div>
+        <div class="text-center" style="margin-bottom: 20vh">
+            <h1>让652更青春！</h1>
+        </div>
+
+        <!-- 下部区域 -->
+        <div class="flex-grow-1 ss text-center">
+            <h3>关于此网页:</h3>
+            <h3>
+欢迎川轻化的青柠们，大家可以注册自己的账号，并在此发布关于在川轻化学习生活的信息，期待大家共同分享生活，储蓄热爱！
+</h3>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(document).ready(function() {
+    var backgrounds = [
+        '{% static 'img/backgrounds/bg2.jpg' %}',
+        '{% static 'img/backgrounds/bg3.jpg' %}',
+        '{% static 'img/backgrounds/bg4.jpg' %}',
+        '{% static 'img/backgrounds/bg5.jpg' %}',
+        '{% static 'img/backgrounds/bg6.jpg' %}',
+        '{% static 'img/backgrounds/bg7.jpg' %}',
+    ]; // 替换为你的图片URL
+    var current = 0;
+
+    function nextBackground() {
+        current++;
+        current = current % backgrounds.length;
+        $('body').css('background-image', 'url(' + backgrounds[current] + ')');
+        $('body').css('background-size', 'cover'); // 确保背景图片覆盖整个页面
+        $('body').css('filter', 'blur(0px)'); // 添加模糊效果
+    }
+
+    setInterval(nextBackground, 6000); // 设置间隔为两分钟
+
+    $('body').css('background-image', 'url(' + backgrounds[0] + ')');
+    $('body').css('background-size', 'cover'); // 确保背景图片覆盖整个页面
+    $('body').css('filter', 'blur(0px)'); // 添加模糊效果
+});
+    </script>
+{% endblock %}

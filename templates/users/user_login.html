@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>橘子青柠.COM</title>
+    <link rel="stylesheet" href="{% static 'plugin/bootstrap-4.6.2-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugin/bootstrap-icons-1.11.2/font/bootstrap-icons.css' %}">
+</head>
+<body class="text-center">
+<div class="container container-lg container-md container-sm container-xl shadow rounded" style="margin-top: 14%; width: 45vh">
+    <form class="form-signin" method="post" novalidate>
+        {% csrf_token %}
+      <h1 class="h3 mb-3 font-weight-normal">登录</h1>
+        {{ from.user_id.label }}
+              {{ form.user_id }}
+            <small id="Help1" class="form-text text-danger">{{ form.user_id.errors.0 }}</small>
+              {{ form.password }}
+              <small id="Help2" class="form-text text-danger">{{ form.password.errors.0 }}</small>
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    {{ form.code }}
+                    <small id="Help3" class="form-text text-danger small">{{ form.code.errors.0 }}</small>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <img src="{% url 'users:auth_image_code' %}" alt="验证码"/>
+                </div>
+            </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+    </form>
+    <small id="Help4" class="form-text text-muted">没有账号？ <a href="{% url 'users:user_register' %}">立即注册</a></small>
+</div>
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'plugin/bootstrap-4.6.2-dist/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

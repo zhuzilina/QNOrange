@@ -1,0 +1,324 @@
+{% extends 'base.html' %} 
+
+{% block css %}
+    .response_add {
+    }
+    .talk_like{
+    }
+    .response_like{
+    }
+{% endblock %}
+
+{% block content %}
+
+    <div class="jumbotron container bg-white">
+        <h1 class="display-5" id="topic_title">{{ topic.title }}</h1>
+     <p class="lead">
+         {{ topic.temp_name }}
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         {{ topic.date_added | date:"Y年m月d日-H时m分" }}
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        {{ topic.like }}
+      <svg class="bi bi-heart-fill text-danger" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+        </svg>
+      </p>
+    <p style="font-size: 24px" class="lead" id="topic_content" topic_id="{{ topic.id }}">{{ topic.content }}</p>
+    <hr class="my-4">
+ 
+    <div class="container" style="margin-top: 24px">
+    {% if user_active.0 != topic.owner_id %}
+    <a class="btn btn-outline-primary" id="topic_like" href="#" author="{{ topic.owner_id }}">喜欢</a>
+    {% endif %}
+    {% if user_active.0 == topic.owner_id %}
+        <a class="btn btn-outline-primary" href="{% url 'topics:topic_delete' %}?id={{ topic.id }}">删除</a>
+    {% endif %}
+    <div style="float:right">
+        <button  id='talk_add' topic_id='{{ topic.id }}' class="btn-primary btn">评论</button>
+     </div>
+    <hr class="my-4">
+ 
+ 
+     {% if talk_list %}
+         <div class="container">
+            {% for talk in talk_list %}
+                <div class="jumbotron container">
+                <p style="font-size: 24px"><b>{{ talk.talk.temp_name }}:</b><sapn id="talk_content_{{ talk.talk.id }}">{{ talk.talk.content }}</sapn></p>
+                 <p class="lead">{{ talk.talk.date_added | date:"Y年m月d日-H时m分" }}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    {{ talk.talk.like }}
+                  <svg class="bi bi-heart-fill text-danger" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                    </svg>
+                  </p>
+                <hr class="my-4">
+                <p class="lead">
+                {% if user_active.0 != talk.talk.source %}
+                <a class="btn btn-outline-primary talk_like" id="talk_like_{{ talk.talk.id }}" href="#talk_content_{{ talk.talk.id }}" author="{{ talk.talk.source }}" talk_id="{{ talk.talk.id }}">喜欢</a>
+                {% endif %}
+                {% if user_active.0 == talk.talk.source %}
+                    <a class="btn btn-outline-primary" href="{% url 'topics:talk_delete' talk.talk.id %}?topic_id={{ topic.id }}">删除</a>
+                {% endif %}
+                <button  id='talk{{ talk.talk.id }}_response_add' talk_id='{{ talk.talk.id }}' forward_id="{{ talk.talk.source }}" class="btn-primary btn response_add">回复</button>
+                </p>
+                {% if talk.responses %}
+                    {% for response in talk.responses %}
+                        <p>
+                            <b>{{ response.temp_name.0 }}回复{{ response.temp_name.1 }}:</b>
+                            <a id="response_{{ response.id }}" class="response_add" href="#response_{{ response.id }}" talk_id='{{ talk.talk.id }}' forward_id="{{ response.source }}">{{ response.content }}</a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span>{{ response.like }}</span>
+                            <span>
+                                <svg class="bi bi-heart-fill text-danger" width="0.6em" height="0.6em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                                </svg>
+                            </span>
+                            <p>
+                                {% if user_active.0 != response.source %}
+                                 <a id="response_like_{{ response.id }}" class="response_like" href="#talk_like_{{ talk.talk.id }}" author="{{ response.source }}" response_id="{{ response.id }}">喜欢</a>
+                                {% endif %}
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                {% if user_active.0 == response.source %}
+                                    <a href="{% url 'topics:response_delete' response.id %}?topic_id={{ topic.id }}&forward={{ talk.talk.id }}">删除</a>
+                                {% endif %}
+                            </p>
+                    {% endfor %}
+                {% else %}
+                    <p>暂时没有回复</p>
+                {% endif %}
+                </div>
+            {% endfor %}
+         </div>
+     {% else %}
+         <div class="container" style="margin-top: 20px">
+            <p>暂时还没有评论</p>
+         </div>
+    {% endif %}
+    </div>
+</div>
+    
+    
+    
+    <!-- Modal 弹出框 -->
+<div class="modal fade" id="InputModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="title_modal">回复</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+                <textarea id="modal_content" class="form-control" placeholder="输入你的内容..." name="content"></textarea>
+                <small id="Help1" class="form-text text-danger"></small>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="Btn0" class="btn btn-secondary" data-dismiss="modal">取消</button>
+        <button type="button" id="Btn1" class="btn btn-primary">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+
+    $(function(){
+        bindBtn1Event();
+        bindBtn2Event();
+        talk_addEvent();
+        response_addEvent();
+        topicLikeEvent();
+        talkLikeEvent();
+        responseLikeEvent();
+    })
+    //点击事件
+    function talk_addEvent() {
+        $('#talk_add').click(function (){
+            $('#InputModal').modal('show');
+            $('#title_modal').text('评论')
+            $('#Btn2').remove()
+            $('#Btn1').remove()
+            $('#Btn0').after("<button type='button' id='Btn1' class='btn btn-primary'>确定</button>")
+            bindBtn1Event();
+        });
+    }
+    function response_addEvent() {
+        $('.response_add').click(function () {
+            $('#InputModal').modal('show');
+            var talk_id = $(this).attr("talk_id")
+            var forward_id = $(this).attr("forward_id")
+            var content_abstract = $("#talk_content_" + talk_id).text();
+            var author = $("#talk_like_" + talk_id).attr('author');
+            console.log(talk_id);
+            $('#Btn1').remove();
+            $('#Btn2').remove();
+            $('#title_modal').text('回复')
+            $('#Btn0').after("<button type='button' id='Btn2' class='btn btn-primary'>确定</button>");
+            document.querySelector('#Btn2').setAttribute('talk_id',talk_id);
+            document.querySelector('#Btn2').setAttribute('forward_id',forward_id);
+            document.querySelector('#Btn2').setAttribute('data',content_abstract);
+            document.querySelector('#Btn2').setAttribute('author',author);
+            bindBtn2Event();
+        });
+    }
+    //处理评论的事件
+    function bindBtn1Event(){
+        $("#Btn1").click(function (){
+            //点击提交数据
+            var author = document.querySelector('#topic_like').getAttribute('author');
+            var data = $('#topic_title').text();
+            console.log(data)
+            if(data.length > 11){
+                var data_list = data.split('');
+                data = data_list.slice(0,10).join('');
+            }
+            $.ajax({
+               url: "{% url 'topics:talk_add' %}",
+                type: "post",
+                data: {
+                    content: document.getElementById('modal_content').value,
+                    topic_id: document.querySelector('#talk_add').getAttribute('topic_id'),
+                    author:author,
+                    data:data
+                },
+                datatype: "JSON",
+                success: function (res){
+                   if (res.status) {
+                       $('#InputModal').modal('hide');
+                       
+                       location.reload();
+                   } else {
+                       console.log(res.error.content[0]);
+                       $('#Help1').text(res.error.content[0]);
+                   }
+                }
+            })
+        });
+    }
+    //处理回复的事件
+    function bindBtn2Event(){
+        $("#Btn2").click(function (){
+            //点击提交数据
+            var topic_id = $("#topic_like").attr('topic_id');
+            var talk_id = $(this).attr('talk_id');
+            var forward_id = $(this).attr('forward_id');
+            var data = $(this).attr('data')
+            var author = $(this).attr('author')
+            if(data.length > 11){
+                var data_list = data.split('');
+                data = data_list.slice(0,10).join('');
+            }
+            $.ajax({
+               url: "{% url 'topics:response_add'%}",
+                type: "post",
+                data: {
+                    content: document.getElementById('modal_content').value,
+                    topic_id:topic_id,
+                    talk_id: talk_id,
+                    forward_id: forward_id,
+                    author:author,
+                    data:data
+                },
+                datatype: "JSON",
+                success: function (res){
+                   if (res.status) {
+                       $('#InputModal').modal('hide');
+                       location.reload();
+                   } else {
+                       console.log(res.error.content[0]);
+                       $('#Help1').text(res.error.content[0]);
+                   }
+                }
+            });
+        });
+    }
+    //处理点赞的事件
+    function topicLikeEvent(){
+        $("#topic_like").click(function (){
+            //点击提交数据
+            var topic_id = $(this).attr('topic_id');
+            var author = $(this).attr('author');
+            var content_id = "#topic_" + topic_id;
+            var content = $(content_id).text();
+            $.ajax({
+               url: "{% url 'topics:topic_like'%}",
+                type: "post",
+                data: {
+                    topic_id:topic_id,
+                    author:author,
+                    data:content
+                },
+                datatype: "JSON",
+                success: function (res){
+                   console.log(res)
+                   if (res.status) {
+                       location.reload();
+                   } else {
+                       alert('您已点过赞');
+                   }
+                }
+            });
+        });
+    }
+    function talkLikeEvent(){
+        $(".talk_like").click(function (){
+            //点击提交数据
+            var topic_id = $("#topic_content").attr('topic_id');
+            var talk_id = $(this).attr('talk_id')
+            var author = $(this).attr('author');
+            var content_id = "#talk_content_" + talk_id;
+            var content = $(content_id).text();
+            $.ajax({
+               url: "{% url 'topics:talk_like'%}",
+                type: "post",
+                data: {
+                    topic_id:topic_id,
+                    talk_id:talk_id,
+                    author:author,
+                    data:content
+                },
+                datatype: "JSON",
+                success: function (res){
+                   console.log(res)
+                   if (res.status) {
+                       location.reload();
+                   } else {
+                       alert('您已点过赞');
+                   }
+                }
+            });
+        });
+    }
+    function responseLikeEvent(){
+        $(".response_like").click(function (){
+            //点击提交数据
+            var topic_id = $("#topic_content").attr('topic_id');
+            var author = $(this).attr('author');
+            var response_id = $(this).attr('response_id');
+            var content_id = "#response_" + response_id;
+            var content = $(content_id).text();
+            $.ajax({
+               url: "{% url 'topics:response_like'%}",
+                type: "post",
+                data: {
+                    topic_id:topic_id,
+                    author:author,
+                    response_id:response_id,
+                    data:content
+                },
+                datatype: "JSON",
+                success: function (res){
+                   if (res.status) {
+                       location.reload();
+                   } else {
+                       alert('您已点过赞');
+                   }
+                }
+            });
+        });
+    }
+    </script>
+{% endblock %}

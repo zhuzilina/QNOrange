@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>橘子青柠.COM</title>
+    <link rel="stylesheet" href="{% static 'plugin/bootstrap-4.6.2-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugin/bootstrap-icons-1.11.2/font/bootstrap-icons.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'plugin/jquery-datetimepicker/jquery.datetimepicker.css' %}"/ >
+
+    <style>
+        .navbackground{
+            background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%);
+            }
+        {% block css %}
+        {% endblock %}
+    </style>
+</head>
+<body>
+<div>
+    <nav class="navbar navbar-expand-lg navbar-light navbackground shadow flex-top">
+      <img src="{% static 'img/LOGO.svg' %}" class="img-fluid" alt="" width=8% height="8%"/>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'weweb:index' %}">主页 <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'topics:topics_view' %}">动态</a>
+          </li>
+        </ul>
+          {% if user_active.0 %}
+          <a class="nav-link" href="{% url 'users:user_logout'%}">注销</a>
+          <a class="nav-link" href="{% url 'users:user_home_private'%}">{{ user_active.1 }}</a>
+          {% else %}
+          <a class="nav-link" href="{% url 'users:user_login'%}">登录</a>
+          {% endif %}
+      </div>
+    </nav>
+</div>
+
+<div>
+    {% block content%}
+    
+    
+    {% endblock %}
+</div>
+
+
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'plugin/bootstrap-4.6.2-dist/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'plugin/jquery-datetimepicker/build/jquery.datetimepicker.full.js' %}"></script>
+{% block js %}
+    
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block css %}
+    @font-face {
+    font-family: 'FontTitle';
+    src: url('{% static 'img/font_title.ttf' %}') format('truetype');
+    }
+{% endblock %}
+
+{% block content %}
+    <div class="container jumbotron navbackground" style="margin-top: 4.7vh; font-family: FontTitle,serif">
+        <dl class="row">
+          <dt class="col-sm-3" style="font-size: 2.7em">652工程</dt>
+          <dd class="col-sm-9" style="font-size: 1.5em">965年春天，一批开拓者投身"三线建设"，从繁华的上海来到偏僻荒凉的沿滩邓关黄岭，开启了652工程，吹响了建设华东化工学院西南分院的号角。在人烟稀少、杂草丛生的黄岭建成了一座高等学府，孕育了"勤奋求实、艰苦奋斗、无私奉献、校兴我荣"的黄岭精神。
+            根据毛泽东主席"备战、备荒、为人民"的战略决策，国务院总理周恩来亲自批示，作为教育部重点高等学校的华东化工学院（现华东理工大学）内迁部分保密专业，选址自贡黄岭创建华东化工学院西南分院（对外称之为"652工程")，开始了四川理工学院（现四川轻化工大学）本科教育的办学历程。652精神是四川轻化工大学在长期办学过程中形成的精神传统和宝贵财富。
+        </dd>
+        
+          <dt class="col-sm-3" style="font-size: 2.7em">652精神释义</dt>
+          <dd class="col-sm-9">
+            
+            <ul>
+              <li style="font-size: 2em">胸怀天下之家国情怀：</li><br/>
+                <p style="font-size: 1.5em">意味着川轻化工大学的学生要有广阔的视野和家国情怀，关注国家和世界的命运。</p>
+                <li style="font-size: 2em">舍我其谁之使命担当：</li><br/>
+                <p style="font-size: 1.5em">意味着川轻化工大学的学生要有坚定的责任感和使命感，敢于担当，不畏艰难。</p>
+                <li style="font-size: 2em">自强不息之开拓奋进：</li><br/>
+                <p style="font-size: 1.5em">意味着川轻化工大学的学生要不断努力，自强不息，开拓创新，追求卓越</p>
+            </ul>
+              <p style="font-size: 2em">652精神是伟大建党精神谱系在四川轻化工大学建校、立校、兴校历程的具体承传和生动呈现。</p>
+          </dd>
+        </dl>
+    </div>
+    
+{% endblock %}
